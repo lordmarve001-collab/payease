@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+
+@config "../../tailwind.config.js";
+
+@theme {
+  --color-primary: #D97706;
+  --color-primary-dark: #B45309;
+  --color-primary-light: #FEF3C7;
+  --color-secondary: #7C3AED;
+  --color-accent: #F59E0B;
+  --color-danger: #EF4444;
+  --color-surface: #FFFFFF;
+  --color-background: #F8FAFC;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-border: #E2E8F0;
+
+  --color-dark-surface: #1E293B;
+  --color-dark-background: #0F172A;
+  --color-dark-text-primary: #F8FAFC;
+  --color-dark-text-secondary: #94A3B8;
+  --color-dark-border: #334155;
+  --color-dark-primary: #F59E0B;
+  --color-dark-primary-dark: #FBBF24;
+  --color-dark-primary-light: #451A03;
+  --color-dark-secondary: #A78BFA;
+  --color-dark-accent: #FBBF24;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+.dark {
+  --color-surface: var(--color-dark-surface);
+  --color-background: var(--color-dark-background);
+  --color-text-primary: var(--color-dark-text-primary);
+  --color-text-secondary: var(--color-dark-text-secondary);
+  --color-border: var(--color-dark-border);
+  --color-primary: var(--color-dark-primary);
+  --color-secondary: var(--color-dark-secondary);
+    --color-accent: var(--color-dark-accent);
+}
