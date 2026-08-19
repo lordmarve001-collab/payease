@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         // Create test customer
         $customer = User::create([
-            'phone_number' => '08012345001',
+            'phone_number' => '8012345001',
             'full_name' => 'Test Customer',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
@@ -39,11 +39,11 @@ class DatabaseSeeder extends Seeder
         ]);
         $customer->assignRole('customer');
         $this->createWallet($customer, 'customer');
-        $this->accounts[] = ['role' => 'Customer', 'phone' => '08012345001', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Customer', 'phone' => '8012345001', 'pin' => '123456'];
 
         // Create second test customer for transfers
         $recipientCustomer = User::create([
-            'phone_number' => '08012345006',
+            'phone_number' => '8012345006',
             'full_name' => 'Recipient Customer',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
@@ -51,11 +51,11 @@ class DatabaseSeeder extends Seeder
         ]);
         $recipientCustomer->assignRole('customer');
         $this->createWallet($recipientCustomer, 'customer');
-        $this->accounts[] = ['role' => 'Customer 2', 'phone' => '08012345006', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Customer 2', 'phone' => '8012345006', 'pin' => '123456'];
 
         // Create test agent
         $agentUser = User::create([
-            'phone_number' => '08012345002',
+            'phone_number' => '8012345002',
             'full_name' => 'Test Agent',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
@@ -78,11 +78,11 @@ class DatabaseSeeder extends Seeder
             'approved_at' => now(),
         ]);
         $this->createWallet($agentUser, 'agent');
-        $this->accounts[] = ['role' => 'Agent', 'phone' => '08012345002', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Agent', 'phone' => '8012345002', 'pin' => '123456'];
 
         // Create pending agent for admin approval flow
         $pendingAgentUser = User::create([
-            'phone_number' => '08012345007',
+            'phone_number' => '8012345007',
             'full_name' => 'Pending Agent',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
@@ -104,11 +104,11 @@ class DatabaseSeeder extends Seeder
             'status' => 'pending',
         ]);
         $this->createWallet($pendingAgentUser, 'agent');
-        $this->accounts[] = ['role' => 'Pending Agent', 'phone' => '08012345007', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Pending Agent', 'phone' => '8012345007', 'pin' => '123456'];
 
         // Create test ajo owner
         $ajoOwnerUser = User::create([
-            'phone_number' => '08012345003',
+            'phone_number' => '8012345003',
             'full_name' => 'Test Ajo Owner',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
@@ -120,11 +120,11 @@ class DatabaseSeeder extends Seeder
             'business_name' => 'Test Ajo Group',
             'status' => 'active',
         ]);
-        $this->accounts[] = ['role' => 'Ajo Owner', 'phone' => '08012345003', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Ajo Owner', 'phone' => '8012345003', 'pin' => '123456'];
 
         // Create agent for ajo owner
         $ajoAgentUser = User::create([
-            'phone_number' => '08012345004',
+            'phone_number' => '8012345004',
             'full_name' => 'Test Ajo Agent',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
@@ -148,29 +148,29 @@ class DatabaseSeeder extends Seeder
             'approved_at' => now(),
         ]);
         $this->createWallet($ajoAgentUser, 'agent');
-        $this->accounts[] = ['role' => 'Ajo Agent', 'phone' => '08012345004', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Ajo Agent', 'phone' => '8012345004', 'pin' => '123456'];
 
         // Create test admin
         $admin = User::create([
-            'phone_number' => '08012345005',
+            'phone_number' => '8012345005',
             'full_name' => 'Test Admin',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
             'kyc_level' => 3,
         ]);
         $admin->assignRole('admin');
-        $this->accounts[] = ['role' => 'Admin', 'phone' => '08012345005', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Admin', 'phone' => '8012345005', 'pin' => '123456'];
 
         // Create test super admin
         $superAdmin = User::create([
-            'phone_number' => '08012345000',
+            'phone_number' => '8012345000',
             'full_name' => 'Test Super Admin',
             'pin_hash' => Hash::make('123456', ['rounds' => 12]),
             'status' => 'active',
             'kyc_level' => 3,
         ]);
         $superAdmin->assignRole('super_admin');
-        $this->accounts[] = ['role' => 'Super Admin', 'phone' => '08012345000', 'pin' => '123456'];
+        $this->accounts[] = ['role' => 'Super Admin', 'phone' => '8012345000', 'pin' => '123456'];
 
         // Create test transactions
         $this->createTestTransactions(
