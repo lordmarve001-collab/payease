@@ -55,7 +55,7 @@
 
     {{-- PWA Install Banner --}}
     <div id="pwa-install-banner"
-         class="fixed bottom-0 inset-x-0 z-[9999] p-4 transform translate-y-full transition-transform duration-500 ease-out pointer-events-none"
+         class="fixed bottom-0 inset-x-0 z-[9999] p-4 hidden"
          style="pointer-events: auto;">
         <div class="max-w-lg mx-auto rounded-2xl border border-border overflow-hidden shadow-2xl"
              style="background: linear-gradient(135deg, #0F172A 0%, #1a1a2e 100%);">
@@ -68,7 +68,7 @@
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-white font-semibold text-sm">Install PayEase</p>
-                    <p class="text-white/60 text-xs mt-0.5">Add to home screen for quick access</p>
+                    <p id="pwa-install-text" class="text-white/60 text-xs mt-0.5">Add to home screen for quick access</p>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
                     <button id="pwa-install-btn"
@@ -106,45 +106,69 @@
             });
         }
 
-        let deferredPrompt = null;
-        const installBanner = document.getElementById('pwa-install-banner');
-        const installBtn = document.getElementById('pwa-install-btn');
-        const dismissBtn = document.getElementById('pwa-dismiss-btn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
+        (function() {
             const dismissed = localStorage.getItem('pwa_install_dismissed');
             const installed = localStorage.getItem('pwa_installed');
-            if (!dismissed && !installed) {
-                setTimeout(() => {
-                    installBanner.classList.remove('translate-y-full');
-                    installBanner.classList.add('translate-y-0');
-                }, 2000);
-            }
-        });
+            if (dismissed || installed) return;
+            if (window.matchMedia('(display-mode: standalone)').matches) return;
+            if (window.navigator.standalone) return;
 
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
+            const banner = document.getElementById('pwa-install-banner');
+            const installBtn = document.getElementById('pwa-install-btn');
+            const dismissBtn = document.getElementById('pwa-dismiss-btn');
+            const installText = document.getElementById('pwa-install-text');
+            let deferredPrompt = null;
+
+            function showBanner() {
+                banner.classList.remove('hidden');
+            }
+
+            function hideBanner() {
+                banner.classList.add('hidden');
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                showBanner();
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        localStorage.setItem('pwa_installed', 'true');
+                        hideBanner();
+                    }
+                    deferredPrompt = null;
+                } else {
+                    const ua = navigator.userAgent.toLowerCase();
+                    const isIOS = /iphone|ipad|ipod/.test(ua);
+                    if (isIOS) {
+                        installText.textContent = 'Tap the Share button, then "Add to Home Screen"';
+                    } else {
+                        installText.textContent = 'Click the install icon in your browser address bar';
+                    }
+                }
+            });
+
+            dismissBtn.addEventListener('click', () => {
+                localStorage.setItem('pwa_install_dismissed', 'true');
+                hideBanner();
+            });
+
+            window.addEventListener('appinstalled', () => {
                 localStorage.setItem('pwa_installed', 'true');
-                installBanner.classList.add('translate-y-full');
+                hideBanner();
+            });
+
+            if (!('beforeinstallprompt' in window)) {
+                setTimeout(() => {
+                    showBanner();
+                }, 5000);
             }
-            deferredPrompt = null;
-        });
-
-        dismissBtn.addEventListener('click', () => {
-            localStorage.setItem('pwa_install_dismissed', 'true');
-            installBanner.classList.add('translate-y-full');
-        });
-
-        window.addEventListener('appinstalled', () => {
-            localStorage.setItem('pwa_installed', 'true');
-            installBanner.classList.add('translate-y-full');
-            deferredPrompt = null;
-        });
+        })();
     </script>
 
     {!! $siteSettings->custom_footer_html ?? '' !!}
