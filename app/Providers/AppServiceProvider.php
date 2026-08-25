@@ -117,6 +117,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('login', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
         RateLimiter::for('pin', fn (Request $request) => Limit::perMinute(5)->by(auth()->id() ?? $request->ip()));
         RateLimiter::for('registration', fn (Request $request) => Limit::perHour(3)->by($request->ip()));
+        RateLimiter::for('webhook', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
+        RateLimiter::for('ussd', fn (Request $request) => Limit::perMinute(20)->by($request->input('sessionId', $request->ip())));
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(120)->by($request->user()?->id ?: $request->ip()));
 
         rescue(function (): void {
             if (Schema::hasTable('site_settings')) {

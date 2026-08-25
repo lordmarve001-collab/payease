@@ -12,3 +12,4 @@ Schedule::command('payease:reconcile-monnify-balances')->dailyAt('02:00');
 Schedule::command('disbursement:revert-expired-otps')->hourly();
 Schedule::command('payease:backup-database')->dailyAt('03:00');
 Schedule::command('horizon:snapshot')->everyFiveMinutes();
+Schedule::command('payease:process-recurring-payments')->hourly();

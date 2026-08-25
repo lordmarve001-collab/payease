@@ -107,13 +107,21 @@ Route::get('/style-guide', function () {
     return view('style-guide');
 });
 
-Route::post('/webhooks/monnify', MonnifyWebhookController::class)->name('webhooks.monnify');
+Route::post('/webhooks/monnify', MonnifyWebhookController::class)
+    ->middleware('throttle:webhook')
+    ->name('webhooks.monnify');
 Route::get('/payment/callback', [\App\Http\Controllers\MonnifyPaymentCallback::class, 'handleRedirect'])->name('payment.callback');
-Route::post('/webhooks/opay', fn () => response()->json(['message' => 'OPay webhook integration pending.'], 501))->name('webhooks.opay');
-Route::post('/webhooks/palmpay', fn () => response()->json(['message' => 'PalmPay webhook integration pending.'], 501))->name('webhooks.palmpay');
+Route::post('/webhooks/opay', fn () => response()->json(['message' => 'OPay webhook integration pending.'], 501))
+    ->middleware('throttle:webhook')
+    ->name('webhooks.opay');
+Route::post('/webhooks/palmpay', fn () => response()->json(['message' => 'PalmPay webhook integration pending.'], 501))
+    ->middleware('throttle:webhook')
+    ->name('webhooks.palmpay');
 
 // USSD Callback
-Route::post('/ussd/callback', UssdController::class)->name('ussd.callback');
+Route::post('/ussd/callback', UssdController::class)
+    ->middleware('throttle:ussd')
+    ->name('ussd.callback');
 
 // Auth Routes (Guest)
 Route::middleware(['guest', 'throttle:registration'])->group(function () {
@@ -188,7 +196,7 @@ Route::prefix('agent')->middleware(['auth', 'role:agent'])->group(function () {
 });
 
 // Admin Routes
-Route::prefix('admin')->middleware(['auth', 'role:admin|super_admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:admin|super_admin', 'log.admin'])->group(function () {
     Route::get('/overview', AdminOverview::class)->name('admin.overview');
     Route::get('/users', AdminUsers::class)->name('admin.users');
     Route::get('/ajo-owners', AdminAjoOwners::class)->name('admin.ajo-owners');

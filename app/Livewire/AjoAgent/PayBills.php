@@ -68,10 +68,21 @@ class PayBills extends Component
 
         /** @var User $user */
         $user = Auth::user();
-        if (!$user->verifyTransferPin($this->pin)) {
-            $this->addError('pin', 'Incorrect PIN.');
+
+        $pinLockout = app(\App\Services\PinLockoutService::class);
+
+        if ($pinLockout->isLocked('transfer', $user->id)) {
+            $this->addError('pin', 'Too many failed attempts. Please try again later.');
             return;
         }
+
+        if (!$user->verifyTransferPin($this->pin)) {
+            $result = $pinLockout->recordFailedAttempt('transfer', $user);
+            $this->addError('pin', $result['message']);
+            return;
+        }
+
+        $pinLockout->clearAttempts('transfer', $user->id);
 
         $this->processing = true;
 

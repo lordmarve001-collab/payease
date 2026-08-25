@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUuids, HasRoles;
+    use HasFactory, Notifiable, HasUuids, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -124,6 +125,26 @@ class User extends Authenticatable
     public function registeredByAgent(): HasOne
     {
         return $this->hasOne(Agent::class, 'id', 'registered_by_agent_id');
+    }
+
+    public function referralRecords(): HasMany
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function referredByRecord(): HasMany
+    {
+        return $this->hasMany(Referral::class, 'referred_id');
+    }
+
+    public function disputes(): HasMany
+    {
+        return $this->hasMany(Dispute::class);
+    }
+
+    public function recurringPayments(): HasMany
+    {
+        return $this->hasMany(RecurringPayment::class);
     }
 
     public function verifyLoginPin(string $pin): bool

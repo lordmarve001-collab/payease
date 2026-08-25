@@ -24,3 +24,9 @@ Homestead.yaml
 Thumbs.db
 database.sqlite
 *.sqlite
+composer.phar
+_check_agents.php
+_test_agent_login.php
+test_debug.php
+temp_test_dashboard.php
+check_role.php

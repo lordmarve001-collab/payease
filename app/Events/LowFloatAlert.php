@@ -9,35 +9,34 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TransactionCompleted implements ShouldBroadcast
+class LowFloatAlert implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public Transaction $transaction,
+        public float $remainingFloat,
     ) {}
 
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('wallet.' . $this->transaction->to_wallet_id),
+            new PrivateChannel('admin.float-alerts'),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'transaction.completed';
+        return 'admin.low-float';
     }
 
     public function broadcastWith(): array
     {
         return [
-            'id' => $this->transaction->id,
-            'reference' => $this->transaction->reference,
+            'agent_id' => $this->transaction->agent_id,
+            'remaining_float' => $this->remainingFloat,
+            'transaction_id' => $this->transaction->id,
             'amount' => (float) $this->transaction->amount,
-            'type' => $this->transaction->transaction_type,
-            'status' => $this->transaction->status,
-            'description' => $this->transaction->description,
             'created_at' => $this->transaction->created_at->toIso8601String(),
         ];
     }

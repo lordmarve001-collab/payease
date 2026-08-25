@@ -144,12 +144,25 @@ class BuyAirtime extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        if (!$user->verifyTransferPin($pin)) {
-            $this->pinError = 'Incorrect PIN.';
+        $pinLockout = app(\App\Services\PinLockoutService::class);
+
+        if ($pinLockout->isLocked('transfer', $user->id)) {
+            $this->pinError = 'Too many failed attempts. Please try again later.';
             $this->resetPinInputs();
             $this->dispatch('focus-airtime-pin');
             return;
         }
+
+        if (!$user->verifyTransferPin($pin)) {
+            $result = $pinLockout->recordFailedAttempt('transfer', $user);
+            $this->pinError = $result['message'];
+            $this->resetPinInputs();
+            $this->dispatch('focus-airtime-pin');
+            return;
+        }
+
+        $pinLockout->clearAttempts('transfer', $user->id);
+        $this->pinError = '';
 
         $this->purchase();
     }
