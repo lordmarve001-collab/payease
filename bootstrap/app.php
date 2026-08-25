@@ -32,7 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(\App\Http\Middleware\SetLocale::class);
 
-        $middleware->throttleWithRedis();
+        // Redis throttling handled per-route in web.php and api.php
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->reportable(function (Throwable $e): void {
