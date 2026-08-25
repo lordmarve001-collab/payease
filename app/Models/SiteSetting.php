@@ -79,8 +79,8 @@ class SiteSetting extends Model
     {
         $instance = new self();
         $instance->site_name = 'PayEase';
-        $instance->primary_color = '#D97706';
-        $instance->secondary_color = '#7C3AED';
+        $instance->primary_color = '#F59E0B';
+        $instance->secondary_color = '#8B5CF6';
         $instance->accent_color = null;
 
         return $instance;

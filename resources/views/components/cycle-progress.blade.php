@@ -8,14 +8,14 @@
 
 @php
     $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
-    
+
     // Size variants
     $svgClass = $size === 'compact' ? 'w-10 h-10' : 'w-24 h-24';
     $strokeWidth = $size === 'compact' ? '3' : '4';
     $radius = $size === 'compact' ? '16' : '36';
     $cx = $size === 'compact' ? '20' : '48';
     $cy = $size === 'compact' ? '20' : '48';
-    
+
     // Circumference calculation
     $circumference = 2 * pi() * $radius;
 @endphp
@@ -25,32 +25,32 @@
     <div class="relative flex items-center justify-center shrink-0">
         <svg class="{{ $svgClass }} transform -rotate-90">
             <!-- Background track -->
-            <circle 
-                cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $radius }}" 
-                stroke="currentColor" 
-                stroke-width="{{ $strokeWidth }}" 
-                fill="transparent" 
-                class="text-gray-100 dark:text-gray-800" />
-            
+            <circle
+                cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $radius }}"
+                stroke="currentColor"
+                stroke-width="{{ $strokeWidth }}"
+                fill="transparent"
+                class="text-surface-2" />
+
             <!-- Progress indicator -->
-            <circle 
-                cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $radius }}" 
-                stroke="currentColor" 
-                stroke-width="{{ $strokeWidth }}" 
-                fill="transparent" 
+            <circle
+                cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $radius }}"
+                stroke="currentColor"
+                stroke-width="{{ $strokeWidth }}"
+                fill="transparent"
                 stroke-dasharray="{{ $circumference }}"
                 :stroke-dashoffset="currentOffset"
                 stroke-linecap="round"
-                class="text-primary transition-all duration-1000 ease-out" />
+                class="text-primary drop-shadow-[0_0_6px_rgba(245,158,11,0.55)] transition-all duration-1000 ease-out" />
         </svg>
-        
+
         <!-- Center Text -->
         <div class="absolute inset-0 flex items-center justify-center">
             @if($size === 'compact')
                 <span class="text-[10px] font-bold text-text-primary">{{ $percentage }}%</span>
             @else
                 <div class="text-center">
-                    <span class="block text-xl font-bold text-text-primary leading-none">{{ $percentage }}%</span>
+                    <span class="block text-xl font-display font-bold text-text-primary leading-none">{{ $percentage }}%</span>
                 </div>
             @endif
         </div>

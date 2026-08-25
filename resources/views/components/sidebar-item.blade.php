@@ -5,10 +5,12 @@
 ])
 
 @php
-    $colorClass = $active ? 'bg-primary-light text-primary' : 'text-text-secondary hover:bg-background hover:text-text-primary';
+    $colorClass = $active
+        ? 'text-primary bg-gradient-to-r from-primary/15 to-transparent shadow-[inset_3px_0_0_var(--color-primary)]'
+        : 'text-text-secondary hover:bg-surface-2 hover:text-text-primary';
 @endphp
 
-<a {{ $attributes->merge(['class' => "flex items-center gap-3 px-3 py-3 rounded-btn transition-colors $colorClass"]) }}>
+<a {{ $attributes->merge(['class' => "relative flex items-center gap-3 px-3 py-2.5 rounded-btn transition-all duration-200 cursor-pointer $colorClass"]) }}>
     <div class="shrink-0 flex items-center justify-center">
         @svg('lucide-'.$icon, 'w-5 h-5')
     </div>

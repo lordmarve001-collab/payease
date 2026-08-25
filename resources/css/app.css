@@ -3,39 +3,201 @@
 @config "../../tailwind.config.js";
 
 @theme {
-  --color-primary: #D97706;
-  --color-primary-dark: #B45309;
-  --color-primary-light: #FEF3C7;
-  --color-secondary: #7C3AED;
-  --color-accent: #F59E0B;
-  --color-danger: #EF4444;
-  --color-surface: #FFFFFF;
-  --color-background: #F8FAFC;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-border: #E2E8F0;
+    --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-display: 'DM Sans', system-ui, -apple-system, sans-serif;
 
-  --color-dark-surface: #1E293B;
-  --color-dark-background: #0F172A;
-  --color-dark-text-primary: #F8FAFC;
-  --color-dark-text-secondary: #94A3B8;
-  --color-dark-border: #334155;
-  --color-dark-primary: #F59E0B;
-  --color-dark-primary-dark: #FBBF24;
-  --color-dark-primary-light: #451A03;
-  --color-dark-secondary: #A78BFA;
-  --color-dark-accent: #FBBF24;
+    /* ── Gold + Violet palette ─────────────────────────── */
+    --color-primary: #F59E0B;
+    --color-primary-dark: #D97706;
+    --color-primary-light: #FDE68A;
+    --color-secondary: #8B5CF6;
+    --color-secondary-dark: #7C3AED;
+    --color-accent: #A78BFA;
+    --color-danger: #F87171;
+    --color-success: #34D399;
+    --color-warning: #FBBF24;
+
+    /* ── OLED navy surfaces ────────────────────────────── */
+    --color-surface: #0F172A;
+    --color-surface-2: #1A2440;
+    --color-background: #070C18;
+    --color-text-primary: #F8FAFC;
+    --color-text-secondary: #94A3B8;
+    --color-border: #1E293B;
 }
 
 @custom-variant dark (&:is(.dark *));
 
-.dark {
-  --color-surface: var(--color-dark-surface);
-  --color-background: var(--color-dark-background);
-  --color-text-primary: var(--color-dark-text-primary);
-  --color-text-secondary: var(--color-dark-text-secondary);
-  --color-border: var(--color-dark-border);
-  --color-primary: var(--color-dark-primary);
-  --color-secondary: var(--color-dark-secondary);
-    --color-accent: var(--color-dark-accent);
+/* Optional light theme (opt-in by toggling `.light` on <html>) */
+.light {
+    --color-primary: #D97706;
+    --color-primary-dark: #B45309;
+    --color-primary-light: #FEF3C7;
+    --color-secondary: #7C3AED;
+    --color-secondary-dark: #6D28D9;
+    --color-accent: #8B5CF6;
+    --color-danger: #EF4444;
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-surface: #FFFFFF;
+    --color-surface-2: #F1F5F9;
+    --color-background: #F8FAFC;
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #64748B;
+    --color-border: #E2E8F0;
+}
+
+/* ════════════════════════════════════════════════════════
+   Premium "Pro Max" utilities
+   ════════════════════════════════════════════════════════ */
+
+/* Gradient text */
+.text-gradient {
+    background: linear-gradient(120deg, #FDE68A 0%, #F59E0B 40%, #FBBF24 70%, #F59E0B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+.text-gradient-violet {
+    background: linear-gradient(120deg, #C4B5FD 0%, #8B5CF6 45%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+.text-gradient-gold-violet {
+    background: linear-gradient(120deg, #F59E0B 0%, #FBBF24 35%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* Animated gradient surface (for hero CTAs / cards) */
+.bg-gradient-animate {
+    background: linear-gradient(120deg, #F59E0B, #FBBF24, #8B5CF6, #F59E0B);
+    background-size: 300% 300%;
+    animation: gradient-shift 8s ease infinite;
+}
+.bg-gradient-brand {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #8B5CF6 130%);
+}
+
+/* Glassmorphism */
+.glass {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.glass-light {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.glass-strong {
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glows */
+.glow-gold { box-shadow: 0 0 50px rgba(245, 158, 11, 0.28), 0 0 120px rgba(245, 158, 11, 0.12); }
+.glow-violet { box-shadow: 0 0 50px rgba(139, 92, 246, 0.28), 0 0 120px rgba(139, 92, 246, 0.12); }
+
+/* Subtle grain / grid / dots backdrops */
+.bg-grid {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+}
+.bg-dots {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+/* ── Scroll-reveal ────────────────────────────────────── */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.reveal.reveal-left { transform: translateX(-36px); }
+.reveal.reveal-right { transform: translateX(36px); }
+.reveal.reveal-scale { transform: scale(0.94); }
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* ── Shimmer skeleton ─────────────────────────────────── */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+.shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    animation: shimmer-sweep 1.6s infinite;
+}
+@keyframes shimmer-sweep {
+    100% { transform: translateX(100%); }
+}
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* ── Dashboard ambient background ─────────────────────── */
+.app-bg {
+    background-color: var(--color-background);
+    background-image:
+        radial-gradient(700px circle at 12% -10%, rgba(245, 158, 11, 0.10), transparent 46%),
+        radial-gradient(800px circle at 105% 8%, rgba(139, 92, 246, 0.12), transparent 46%),
+        radial-gradient(560px circle at 50% 120%, rgba(245, 158, 11, 0.06), transparent 46%);
+    background-attachment: fixed;
+}
+
+/* ── Ambient float (non-tailwind, reusable) ───────────── */
+.ambient-float { animation: ambient-float 6s ease-in-out infinite; }
+@keyframes ambient-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+}
+
+/* ── Scrollbars ───────────────────────────────────────── */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+}
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: #475569; background-clip: content-box; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Reduced motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .reveal { opacity: 1 !important; transform: none !important; }
 }

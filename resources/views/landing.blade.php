@@ -15,8 +15,8 @@
     <style>
         [x-cloak] { display: none !important; }
         :root {
-            --color-primary: {{ $siteSettings->primary_color ?? '#D97706' }};
-            --color-secondary: {{ $siteSettings->secondary_color ?? '#7C3AED' }};
+            --color-primary: {{ $siteSettings->primary_color ?? '#F59E0B' }};
+            --color-secondary: {{ $siteSettings->secondary_color ?? '#8B5CF6' }};
             @if($siteSettings->accent_color ?? null)
                 --color-accent: {{ $siteSettings->accent_color }};
             @endif
@@ -40,6 +40,24 @@
         .feature-icon-ring { background: linear-gradient(135deg, rgba(217,119,6,0.15), rgba(124,58,237,0.15)); }
         .cta-gradient { background: linear-gradient(135deg, #D97706, #B45309, #7C3AED); }
         .stats-divider { background: linear-gradient(90deg, transparent, rgba(217,119,6,0.3), transparent); }
+
+        /* ── Hero slider (vanilla JS, no Alpine dependency) ── */
+        .hero-slide { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); pointer-events: none; }
+        .hero-slide.is-active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .phone-screen { display: none; }
+        .phone-screen.is-active { display: block; animation: hero-screen-in 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+        @keyframes hero-screen-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-dot-btn { width: 10px; background: rgba(255,255,255,0.2); transition: all 0.3s ease; }
+        .hero-dot-btn:hover { background: rgba(255,255,255,0.4); }
+        .hero-dot-btn.is-active { width: 40px; background: linear-gradient(90deg, #F59E0B, #A78BFA); box-shadow: 0 0 12px rgba(245,158,11,0.6); }
+        .text-gradient-animate {
+            background: linear-gradient(120deg, #FDE68A, #F59E0B, #FBBF24, #8B5CF6, #F59E0B);
+            background-size: 300% 300%;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; color: transparent;
+            animation: hero-gradient-text 6s ease infinite;
+        }
+        @keyframes hero-gradient-text { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     </style>
 </head>
 <body class="font-sans antialiased bg-[#0F172A] text-white overflow-x-hidden">
@@ -154,13 +172,15 @@
     </nav>
 
     {{-- ═══════════════ HERO SECTION ═══════════════ --}}
-    <section class="hero-gradient relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden"
-             x-data="heroSlider()">
+    <section id="hero" class="hero-gradient relative min-h-screen flex items-center pt-28 pb-20 overflow-hidden">
         {{-- Background decorations --}}
-        <div class="absolute inset-0 hero-dot opacity-40"></div>
-        <div class="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-[150px]"></div>
-        <div class="absolute top-1/3 right-1/4 w-48 h-48 bg-accent/5 rounded-full blur-[100px]"></div>
+        <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <div class="absolute inset-0 hero-dot opacity-40"></div>
+            <div class="absolute -top-32 -left-32 w-[34rem] h-[34rem] bg-primary/20 rounded-full blur-[140px] animate-blob"></div>
+            <div class="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-secondary/20 rounded-full blur-[160px] animate-blob" style="animation-delay: -5s"></div>
+            <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-accent/15 rounded-full blur-[120px] animate-float-slow"></div>
+            <div class="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-b from-transparent to-[#0F172A]"></div>
+        </div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -168,23 +188,26 @@
                 {{-- Left: Content --}}
                 <div class="text-center lg:text-left">
                     {{-- Badge --}}
-                    <div class="inline-flex items-center gap-2 glass-light rounded-full px-4 py-2 mb-8 animate-fade-in">
+                    <div class="inline-flex items-center gap-2.5 glass-light rounded-full pl-2 pr-4 py-2 mb-8 animate-fade-in-down">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+                        </span>
                         <svg class="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                         <span class="text-xs font-semibold text-white/80 tracking-wide">Partner-Bank Secured · Funds held with our licensed banking partner</span>
                     </div>
 
                     {{-- Slider Headlines --}}
-                    <div class="relative h-[180px] sm:h-[200px] lg:h-[220px]">
+                    <div class="relative h-[200px] sm:h-[220px] lg:h-[240px]" id="hero-headlines">
                         @foreach([
                             ['title' => 'Send Money', 'subtitle' => 'Instantly', 'desc' => 'Transfer money to anyone, anywhere in Nigeria. Fast, secure, and always available.'],
                             ['title' => 'Grow Your', 'subtitle' => 'Savings', 'desc' => 'Join Ajo groups and watch your savings multiply. Earn more with collective saving power.'],
                             ['title' => 'Pay Bills', 'subtitle' => 'Effortlessly', 'desc' => 'Airtime, data, electricity, cable TV — pay all your bills in one place.'],
                         ] as $i => $slide)
-                            <div class="absolute inset-0 transition-all duration-700 ease-in-out"
-                                 :class="currentSlide === {{ $i }} ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'">
+                            <div class="hero-slide absolute inset-0" data-slide="{{ $i }}">
                                 <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.1] tracking-tight">
                                     <span class="text-white">{{ $slide['title'] }}</span><br>
-                                    <span class="text-gradient">{{ $slide['subtitle'] }}</span>
+                                    <span class="text-gradient-animate">{{ $slide['subtitle'] }}</span>
                                 </h1>
                                 <p class="mt-5 text-lg text-white/60 max-w-lg mx-auto lg:mx-0 leading-relaxed">{{ $slide['desc'] }}</p>
                             </div>
@@ -192,24 +215,23 @@
                     </div>
 
                     {{-- CTA Buttons --}}
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8">
-                        <a href="{{ route('register') }}" class="group inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white font-bold text-base rounded-2xl hover:shadow-glow-primary transition-all duration-300 active:scale-95 cursor-pointer">
-                            {{ __('Create Free Account') }}
-                            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8 animate-fade-in-up" style="animation-delay: 0.15s">
+                        <a href="{{ route('register') }}" class="group relative inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold text-base rounded-2xl bg-gradient-animate shadow-glow-primary hover:-translate-y-0.5 hover:shadow-glow-primary transition-all duration-300 active:scale-95 cursor-pointer overflow-hidden">
+                            <span class="absolute inset-0 shimmer opacity-50"></span>
+                            <span class="relative">{{ __('Create Free Account') }}</span>
+                            <svg class="relative w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                         </a>
-                        <a href="#how-it-works" class="inline-flex items-center justify-center gap-2.5 px-8 py-4 glass-light text-white font-semibold text-base rounded-2xl hover:bg-white/10 transition-all duration-300 cursor-pointer">
+                        <a href="#how-it-works" class="inline-flex items-center justify-center gap-2.5 px-8 py-4 glass-light text-white font-semibold text-base rounded-2xl hover:bg-white/10 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             {{ __('See How It Works') }}
                         </a>
                     </div>
 
                     {{-- Slider Dots --}}
-                    <div class="flex items-center gap-3 mt-10 justify-center lg:justify-start">
+                    <div class="flex items-center gap-3 mt-10 justify-center lg:justify-start" id="hero-dots">
                         @foreach([0, 1, 2] as $i)
-                            <button @click="goTo({{ $i }})"
-                                    class="transition-all duration-300 rounded-full cursor-pointer"
-                                    :class="currentSlide === {{ $i }} ? 'w-10 h-2.5 bg-gradient-to-r from-primary to-accent' : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40'">
-                            </button>
+                            <button type="button" data-index="{{ $i }}" aria-label="Slide {{ $i + 1 }}"
+                                    class="hero-dot-btn h-2.5 rounded-full cursor-pointer"></button>
                         @endforeach
                     </div>
                 </div>
@@ -217,9 +239,12 @@
                 {{-- Right: Phone Mockup --}}
                 <div class="relative flex justify-center lg:justify-end">
                     <div class="relative animate-float">
+                        {{-- Glow ring behind phone --}}
+                        <div class="absolute -inset-8 bg-gradient-to-br from-primary/25 via-transparent to-secondary/25 rounded-full blur-3xl pointer-events-none"></div>
+
                         {{-- Phone Frame --}}
                         <div class="relative w-[280px] sm:w-[300px] lg:w-[320px] phone-mockup">
-                            <div class="bg-gradient-to-b from-gray-800 to-gray-900 rounded-[40px] p-3 shadow-elevation-4 border border-white/10">
+                            <div class="bg-gradient-to-b from-slate-700 to-slate-900 rounded-[40px] p-3 shadow-elevation-4 border border-white/15">
                                 <div class="bg-gradient-to-b from-[#1a1040] to-[#0F172A] rounded-[32px] overflow-hidden">
                                     {{-- Status Bar --}}
                                     <div class="flex items-center justify-between px-6 pt-4 pb-2">
@@ -232,7 +257,7 @@
                                     {{-- App Content (cycles with slider) --}}
                                     <div class="px-5 pb-8">
                                         {{-- Screen 1: Home --}}
-                                        <div x-show="currentSlide === 0" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                        <div class="phone-screen is-active" data-screen="0">
                                             <p class="text-white/40 text-xs mb-1">Welcome back,</p>
                                             <p class="text-white font-bold text-lg mb-4">Adaeze</p>
                                             <div class="glass-light rounded-2xl p-4 mb-4">
@@ -260,7 +285,7 @@
                                         </div>
 
                                         {{-- Screen 2: Ajo --}}
-                                        <div x-show="currentSlide === 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-cloak>
+                                        <div class="phone-screen" data-screen="1">
                                             <p class="text-white font-bold text-lg mb-1">My Ajo</p>
                                             <p class="text-white/40 text-xs mb-4">Growing together</p>
                                             <div class="glass-light rounded-2xl p-4 mb-4">
@@ -289,7 +314,7 @@
                                         </div>
 
                                         {{-- Screen 3: Bills --}}
-                                        <div x-show="currentSlide === 2" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-cloak>
+                                        <div class="phone-screen" data-screen="2">
                                             <p class="text-white font-bold text-lg mb-4">Pay Bills</p>
                                             <div class="grid grid-cols-2 gap-3 mb-4">
                                                 @foreach(['Airtime' => 'phone', 'Electricity' => 'bolt', 'Cable TV' => 'tv', 'Data' => 'wifi'] as $name => $icon)
@@ -328,7 +353,7 @@
                         </div>
 
                         {{-- Floating Elements --}}
-                        <div class="absolute -top-4 -right-4 glass-light rounded-2xl px-4 py-3 animate-fade-in hidden sm:block" style="animation-delay: 0.5s">
+                        <div class="absolute -top-4 -right-4 glass-strong rounded-2xl px-4 py-3 animate-float-slow hidden sm:block">
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
                                     <svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -340,7 +365,7 @@
                             </div>
                         </div>
 
-                        <div class="absolute -bottom-2 -left-6 glass-light rounded-2xl px-4 py-3 animate-fade-in hidden sm:block" style="animation-delay: 0.8s">
+                        <div class="absolute -bottom-2 -left-6 glass-strong rounded-2xl px-4 py-3 animate-float-slow hidden sm:block" style="animation-delay: -3s">
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
                                     <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -355,8 +380,22 @@
                 </div>
             </div>
 
+            {{-- Trust indicators --}}
+            <div class="mt-14 flex flex-col sm:flex-row items-center justify-center gap-5 lg:gap-10">
+                @foreach([
+                    ['icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'label' => 'CBN Partner-Bank Secured'],
+                    ['icon' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z', 'label' => 'NDIC-Insured Deposits'],
+                    ['icon' => 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', 'label' => '256-bit Encryption'],
+                ] as $trust)
+                    <div class="flex items-center gap-2.5 text-white/50 animate-fade-in-up" style="animation-delay: 0.35s">
+                        <svg class="w-4 h-4 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $trust['icon'] }}" /></svg>
+                        <span class="text-xs font-medium tracking-wide">{{ $trust['label'] }}</span>
+                    </div>
+                @endforeach
+            </div>
+
             {{-- Scroll Indicator --}}
-            <div class="hidden lg:flex justify-center mt-12">
+            <div class="hidden lg:flex justify-center mt-10">
                 <div class="scroll-hint text-white/30">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
                 </div>
@@ -791,30 +830,43 @@
             document.querySelectorAll('.section-fade').forEach(function(el) {
                 observer.observe(el);
             });
+
+            initHeroSlider();
         });
 
-        function heroSlider() {
-            return {
-                currentSlide: 0,
-                total: 3,
-                interval: null,
-                init() {
-                    this.startAuto();
-                },
-                startAuto() {
-                    this.interval = setInterval(() => {
-                        this.currentSlide = (this.currentSlide + 1) % this.total;
-                    }, 4000);
-                },
-                goTo(index) {
-                    this.currentSlide = index;
-                    clearInterval(this.interval);
-                    this.startAuto();
-                },
-                destroy() {
-                    clearInterval(this.interval);
-                }
+        function initHeroSlider() {
+            var slides = document.querySelectorAll('.hero-slide');
+            var screens = document.querySelectorAll('.phone-screen');
+            var dots = document.querySelectorAll('.hero-dot-btn');
+            if (!slides.length) return;
+
+            var current = 0, timer = null;
+
+            function show(i) {
+                current = (i + slides.length) % slides.length;
+                slides.forEach(function (s, k) { s.classList.toggle('is-active', k === current); });
+                screens.forEach(function (s, k) { s.classList.toggle('is-active', k === current); });
+                dots.forEach(function (d, k) {
+                    d.classList.toggle('is-active', k === current);
+                    d.setAttribute('aria-current', k === current ? 'true' : 'false');
+                });
             }
+            function next() { show(current + 1); }
+            function start() { stop(); timer = setInterval(next, 4000); }
+            function stop() { if (timer) clearInterval(timer); }
+
+            dots.forEach(function (d) {
+                d.addEventListener('click', function () { show(Number(d.dataset.index)); start(); });
+            });
+
+            var section = document.getElementById('hero');
+            if (section) {
+                section.addEventListener('mouseenter', stop);
+                section.addEventListener('mouseleave', start);
+            }
+
+            show(0);
+            start();
         }
 
     </script>

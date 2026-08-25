@@ -14,8 +14,8 @@
     <style>
         [x-cloak] { display: none !important; }
         :root {
-            --color-primary: {{ $siteSettings->primary_color ?? '#D97706' }};
-            --color-secondary: {{ $siteSettings->secondary_color ?? '#7C3AED' }};
+            --color-primary: {{ $siteSettings->primary_color ?? '#F59E0B' }};
+            --color-secondary: {{ $siteSettings->secondary_color ?? '#8B5CF6' }};
             @if($siteSettings->accent_color ?? null)
                 --color-accent: {{ $siteSettings->accent_color }};
             @endif
@@ -23,7 +23,7 @@
     </style>
     {!! $siteSettings->custom_head_html ?? '' !!}
 </head>
-<body class="font-sans antialiased min-h-screen">
+<body class="app-bg text-text-primary font-sans antialiased min-h-screen">
     {{ $slot }}
     {!! $siteSettings->custom_footer_html ?? '' !!}
 </body>

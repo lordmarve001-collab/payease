@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
       x-data="{ 
-        darkMode: localStorage.getItem('darkMode') === 'true',
-        toggleDarkMode() {
-            this.darkMode = !this.darkMode;
-            localStorage.setItem('darkMode', this.darkMode);
-            if (this.darkMode) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+        lightMode: localStorage.getItem('lightMode') === 'true',
+        toggleTheme() {
+            this.lightMode = !this.lightMode;
+            localStorage.setItem('lightMode', this.lightMode);
+            document.documentElement.classList.toggle('light', this.lightMode);
         }
       }"
-      x-init="if(darkMode) document.documentElement.classList.add('dark')">
+      x-init="if(lightMode) document.documentElement.classList.add('light')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -25,8 +21,8 @@
     <style>
         [x-cloak] { display: none !important; }
         :root {
-            --color-primary: {{ $siteSettings->primary_color ?? '#D97706' }};
-            --color-secondary: {{ $siteSettings->secondary_color ?? '#7C3AED' }};
+            --color-primary: {{ $siteSettings->primary_color ?? '#F59E0B' }};
+            --color-secondary: {{ $siteSettings->secondary_color ?? '#8B5CF6' }};
             @if($siteSettings->accent_color ?? null)
                 --color-accent: {{ $siteSettings->accent_color }};
             @endif
@@ -39,22 +35,22 @@
     </style>
     {!! $siteSettings->custom_head_html ?? '' !!}
 </head>
-<body class="bg-background text-text-primary font-sans antialiased min-h-screen pb-20 md:pb-0">
-    
+<body class="app-bg text-text-primary font-sans antialiased min-h-screen pb-20 md:pb-0">
+
     <!-- Top Bar -->
-    <header class="fixed top-0 left-0 right-0 h-16 bg-surface border-b border-border z-30 flex items-center justify-between px-4 md:ml-[240px] transition-all duration-300">
+    <header class="fixed top-0 left-0 right-0 h-16 bg-surface/70 backdrop-blur-xl border-b border-border z-30 flex items-center justify-between px-4 md:ml-[240px] transition-all duration-300">
         <!-- Mobile Left: Hamburger + Brand -->
         <div class="flex items-center gap-3 md:hidden">
-            <button @click="$dispatch('open-mobile-sidebar')" class="p-2 -ml-2 text-text-secondary hover:text-text-primary transition-colors">
+            <button @click="$dispatch('open-mobile-sidebar')" class="p-2 -ml-2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer">
                 <x-lucide-menu class="w-6 h-6" />
             </button>
             <div class="flex items-center gap-2">
                 @if($siteSettings->logo_path)
                     <img src="{{ $siteSettings->logoUrl() }}" alt="{{ $siteSettings->site_name ?? 'PayEase' }}" class="h-7 object-contain">
                 @else
-                    <span class="font-bold text-lg text-primary">{{ $siteSettings->site_name ?? 'PayEase' }}</span>
+                    <span class="font-display font-bold text-lg text-gradient-gold-violet">{{ $siteSettings->site_name ?? 'PayEase' }}</span>
                 @endif
-                <span class="bg-primary-light text-primary text-[10px] font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">Admin</span>
+                <span class="bg-primary/15 text-primary-light text-[10px] font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">Admin</span>
             </div>
         </div>
 
@@ -64,31 +60,31 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <x-lucide-search class="w-4 h-4 text-text-secondary" />
                 </div>
-                <input type="text" class="block w-full pl-10 pr-3 py-2 border border-border rounded-btn bg-background text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors" placeholder="Search users, agents, transactions...">
+                <input type="text" class="block w-full pl-10 pr-3 py-2 border border-border rounded-btn bg-background/60 text-sm placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors" placeholder="Search users, agents, transactions...">
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <span class="text-xs text-text-secondary bg-surface border border-border px-1.5 py-0.5 rounded">⌘K</span>
                 </div>
             </div>
         </div>
-        
+
         <!-- Right Actions -->
         <div class="flex items-center gap-2 sm:gap-4 ml-auto">
-            <!-- Dark Mode Toggle -->
-            <button @click="toggleDarkMode()" class="p-2 text-text-secondary hover:text-text-primary transition-colors rounded-full hover:bg-background">
-                <x-lucide-moon class="w-5 h-5" x-show="!darkMode" />
-                <x-lucide-sun class="w-5 h-5" x-show="darkMode" x-cloak />
+            <!-- Theme Toggle -->
+            <button @click="toggleTheme()" class="p-2 text-text-secondary hover:text-text-primary transition-colors rounded-full hover:bg-surface-2 cursor-pointer">
+                <x-lucide-sun class="w-5 h-5" x-show="!lightMode" />
+                <x-lucide-moon class="w-5 h-5" x-show="lightMode" x-cloak />
             </button>
 
             <!-- Notifications -->
             <livewire:admin.notification-bell />
-            
+
             <!-- Admin Profile -->
             <div class="flex items-center gap-3 pl-2 sm:pl-4 sm:border-l border-border cursor-pointer">
                 <div class="hidden sm:block text-right">
                     <p class="text-sm font-semibold text-text-primary leading-tight">{{ auth()->user()->full_name ?? 'Admin' }}</p>
                     <p class="text-xs text-text-secondary">{{ ucfirst(str_replace('_', ' ', auth()->user()->getRoleNames()->first() ?? 'admin')) }}</p>
                 </div>
-                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                <div class="w-8 h-8 rounded-full bg-gradient-brand text-slate-950 flex items-center justify-center font-bold text-sm shadow-glow-primary">
                     {{ strtoupper(substr(auth()->user()->full_name ?? 'A', 0, 2)) }}
                 </div>
             </div>
@@ -103,7 +99,7 @@
         <x-sidebar-item href="{{ url('/admin/ajo-owners') }}" icon="users-2" label="Ajo Owners" :active="request()->is('admin/ajo-owners')" wire:navigate />
         <x-sidebar-item href="{{ url('/admin/agents') }}" icon="briefcase" label="Agents" :active="request()->is('admin/agents')" wire:navigate />
         <x-sidebar-item href="{{ url('/admin/transactions') }}" icon="arrow-right-left" label="Transactions" :active="request()->is('admin/transactions')" wire:navigate />
-        
+
         <div class="px-3 mb-2 mt-6 text-xs font-bold text-text-secondary uppercase tracking-wider">Operations</div>
         <x-sidebar-item href="{{ url('/admin/ajo-groups') }}" icon="users-2" label="Ajo Groups" :active="request()->is('admin/ajo-groups')" wire:navigate />
         <x-sidebar-item href="{{ url('/admin/kyc-queue') }}" icon="shield-check" label="KYC Queue" :active="request()->is('admin/kyc-queue')" wire:navigate />
@@ -112,7 +108,7 @@
         <x-sidebar-item href="{{ url('/admin/float-management') }}" icon="wallet" label="Float Management" :active="request()->is('admin/float-management')" wire:navigate />
         <x-sidebar-item href="{{ url('/admin/liquidity') }}" icon="landmark" label="Liquidity" :active="request()->is('admin/liquidity')" wire:navigate />
         <x-sidebar-item href="#" icon="alert-triangle" label="Compliance" @click.prevent="$dispatch('notify-info', 'Compliance module coming soon')" />
-        
+
         <div class="px-3 mb-2 mt-6 text-xs font-bold text-text-secondary uppercase tracking-wider">System</div>
         @if(auth()->user()?->hasRole('super_admin'))
             <x-sidebar-item href="{{ url('/admin/settings') }}" icon="settings" label="Settings" :active="request()->is('admin/settings')" wire:navigate />
@@ -126,37 +122,37 @@
     <div x-data="{ open: false }"
          @open-mobile-sidebar.window="open = true"
          class="md:hidden">
-        
+
         <!-- Backdrop -->
-        <div x-show="open" 
-             x-transition.opacity 
-             class="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+        <div x-show="open"
+             x-transition.opacity
+             class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
              @click="open = false" x-cloak></div>
-             
+
         <!-- Drawer -->
         <div x-show="open"
-             x-transition:enter="transition ease-material duration-300 transform"
+             x-transition:enter="transition ease-spring duration-300 transform"
              x-transition:enter-start="-translate-x-full"
              x-transition:enter-end="translate-x-0"
-             x-transition:leave="transition ease-material duration-300 transform"
+             x-transition:leave="transition ease-spring duration-300 transform"
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="-translate-x-full"
-             class="fixed inset-y-0 left-0 w-[260px] bg-surface border-r border-border z-50 flex flex-col" x-cloak>
-             
+             class="fixed inset-y-0 left-0 w-[260px] glass-strong border-r border-border z-50 flex flex-col" x-cloak>
+
             <div class="h-16 flex items-center justify-between px-4 border-b border-border">
                 <div class="flex items-center gap-2">
                     @if($siteSettings->logo_path)
                         <img src="{{ $siteSettings->logoUrl() }}" alt="{{ $siteSettings->site_name ?? 'PayEase' }}" class="h-7 object-contain">
                     @else
-                        <span class="font-bold text-lg text-primary">{{ $siteSettings->site_name ?? 'PayEase' }}</span>
+                        <span class="font-display font-bold text-lg text-gradient-gold-violet">{{ $siteSettings->site_name ?? 'PayEase' }}</span>
                     @endif
-                    <span class="bg-primary-light text-primary text-[10px] font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">Admin</span>
+                    <span class="bg-primary/15 text-primary-light text-[10px] font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">Admin</span>
                 </div>
-                <button @click="open = false" class="p-2 -mr-2 text-text-secondary hover:text-text-primary transition-colors">
+                <button @click="open = false" class="p-2 -mr-2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer">
                     <x-lucide-x class="w-5 h-5" />
                 </button>
             </div>
-            
+
             <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
                 <div class="px-3 mb-2 mt-2 text-xs font-bold text-text-secondary uppercase tracking-wider">Main Menu</div>
                 <x-sidebar-item href="{{ url('/admin/overview') }}" icon="layout-dashboard" label="Overview" :active="request()->is('admin/overview')" wire:navigate @click="open = false" />
@@ -164,7 +160,7 @@
                 <x-sidebar-item href="{{ url('/admin/ajo-owners') }}" icon="users-2" label="Ajo Owners" :active="request()->is('admin/ajo-owners')" wire:navigate @click="open = false" />
                 <x-sidebar-item href="{{ url('/admin/agents') }}" icon="briefcase" label="Agents" :active="request()->is('admin/agents')" wire:navigate @click="open = false" />
                 <x-sidebar-item href="{{ url('/admin/transactions') }}" icon="arrow-right-left" label="Transactions" :active="request()->is('admin/transactions')" wire:navigate @click="open = false" />
-                
+
                 <div class="px-3 mb-2 mt-6 text-xs font-bold text-text-secondary uppercase tracking-wider">Operations</div>
                 <x-sidebar-item href="{{ url('/admin/ajo-groups') }}" icon="users-2" label="Ajo Groups" :active="request()->is('admin/ajo-groups')" wire:navigate @click="open = false" />
                 <x-sidebar-item href="{{ url('/admin/kyc-queue') }}" icon="shield-check" label="KYC Queue" :active="request()->is('admin/kyc-queue')" wire:navigate @click="open = false" />
@@ -195,7 +191,7 @@
           x-data="{ show: false }"
           x-init="setTimeout(() => show = true, 50)"
           :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
-          class="opacity-0 translate-y-4 transition-all duration-250 ease-material">
+          class="opacity-0 translate-y-4 transition-all duration-500 ease-spring">
         {{ $slot }}
     </main>
 
