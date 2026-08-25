@@ -150,14 +150,15 @@
             {{-- Register Link --}}
             <a href="{{ route('register') }}"
                class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold transition-all active:scale-[0.98] border-2"
-               style="border-color: var(--color-secondary, #c39027); color: var(--color-secondary, #c39027);">
+               style="border-color: var(--color-secondary); color: var(--color-secondary);">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
                 {{ __('Create an account') }}
             </a>
 
             {{-- Ajo Owner Signup --}}
             <a href="{{ route('ajo-owner.signup') }}"
-               class="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.98] border border-secondary/30 hover:border-secondary/60 text-secondary/80 hover:text-secondary mt-3">
+               class="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.98] mt-3"
+               style="border: 1px solid var(--color-secondary); color: var(--color-secondary);">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
