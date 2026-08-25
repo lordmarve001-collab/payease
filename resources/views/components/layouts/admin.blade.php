@@ -78,14 +78,36 @@
             <!-- Notifications -->
             <livewire:admin.notification-bell />
 
-            <!-- Admin Profile -->
-            <div class="flex items-center gap-3 pl-2 sm:pl-4 sm:border-l border-border cursor-pointer">
-                <div class="hidden sm:block text-right">
-                    <p class="text-sm font-semibold text-text-primary leading-tight">{{ auth()->user()->full_name ?? 'Admin' }}</p>
-                    <p class="text-xs text-text-secondary">{{ ucfirst(str_replace('_', ' ', auth()->user()->getRoleNames()->first() ?? 'admin')) }}</p>
-                </div>
-                <div class="w-8 h-8 rounded-full bg-gradient-brand text-slate-950 flex items-center justify-center font-bold text-sm shadow-glow-primary">
-                    {{ strtoupper(substr(auth()->user()->full_name ?? 'A', 0, 2)) }}
+            <!-- Admin Profile Dropdown -->
+            <div x-data="{ open: false }" @click.away="open = false" @keydown.escape.window="open = false" class="relative">
+                <button @click="open = !open" class="flex items-center gap-3 pl-2 sm:pl-4 sm:border-l border-border cursor-pointer">
+                    <div class="hidden sm:block text-right">
+                        <p class="text-sm font-semibold text-text-primary leading-tight">{{ auth()->user()->full_name ?? 'Admin' }}</p>
+                        <p class="text-xs text-text-secondary">{{ ucfirst(str_replace('_', ' ', auth()->user()->getRoleNames()->first() ?? 'admin')) }}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-gradient-brand text-slate-950 flex items-center justify-center font-bold text-sm shadow-glow-primary">
+                        {{ strtoupper(substr(auth()->user()->full_name ?? 'A', 0, 2)) }}
+                    </div>
+                    <svg class="w-4 h-4 text-text-secondary transition-transform duration-200" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95 translate-y-1" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-2 w-56 rounded-xl bg-surface border border-border shadow-elevation-3 py-1 z-50" x-cloak>
+                    <div class="px-4 py-3 border-b border-border">
+                        <p class="text-sm font-semibold text-text-primary">{{ auth()->user()->full_name ?? 'Admin' }}</p>
+                        <p class="text-xs text-text-secondary mt-0.5">{{ auth()->user()->email ?? '' }}</p>
+                    </div>
+                    <a href="{{ url('/admin/overview') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        Dashboard
+                    </a>
+                    <div class="border-t border-border my-1"></div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                            Log Out
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
