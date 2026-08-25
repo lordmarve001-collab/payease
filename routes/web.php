@@ -94,7 +94,7 @@ Route::get('/', function () {
             return redirect()->route('customer.dashboard');
         }
     }
-    return view('landing');
+    return redirect()->route('login');
 })->name('home');
 
 Route::get('/api/health', HealthController::class)->name('api.health');

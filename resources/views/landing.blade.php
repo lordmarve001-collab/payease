@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $siteSettings->site_name ?? 'PayEase' }} — {{ $siteSettings->site_tagline ?: __('Fast, Secure Payments for Nigeria') }}</title>
     <meta name="description" content="{{ $siteSettings->site_description ?: __('PayEase is a fast, secure digital payment platform for Nigerians. Send money, pay bills, save with Ajo, and more.') }}">
+    <meta name="theme-color" content="#F59E0B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     @if($siteSettings->favicon_path)
         <link rel="icon" type="image/png" href="{{ $siteSettings->faviconUrl() }}">
     @endif
